@@ -1,0 +1,1 @@
+{"virtualbox":{"/usr/share/nginx/html":{"guestpath":"/usr/share/nginx/html","hostpath":"D:/php","disabled":false,"__vagrantfile":true},"/etc/nginx/conf.d":{"guestpath":"/etc/nginx/conf.d","hostpath":"D:/vagrant/nginx-conf","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"D:/vagrant","disabled":false,"__vagrantfile":true}}}

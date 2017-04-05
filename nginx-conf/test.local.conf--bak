@@ -1,0 +1,71 @@
+#server {
+     #listen 80;
+     #server_name admin.lulumall.cn;
+     #return 301 http://admin.lulumall.cn;
+#}
+server {
+    #listen  443 ssl;
+    listen 80;
+    #ssl_certificate      /etc/nginx/server.crt/lulumall.cn.crt;
+    #ssl_certificate_key  /etc/nginx/server.key/lulumall.cn.key;
+    #ssl_protocols        TLSv1 TLSv1.1 TLSv1.2;
+    #ssl_ciphers          HIGH:!aNULL:!MD5;
+    #ssl_prefer_server_ciphers  on;
+
+    set $root_path '/usr/share/nginx/html/test';
+    root $root_path;
+
+    server_name  test.dev test.local;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        index  index.html index.htm index.php;
+        try_files $uri $uri/ /index.php?$query_string;
+        if (!-e $request_filename){
+            rewrite ^/(.*) /index.php last;
+        }
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root  $root_path;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        root $root_path;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        #fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+        # 设置PATH_INFO并??但~YSCRIPT_FILENAME,SCRIPT_NAME?~M??余¨??塾C住~X?~O  
+        set $fastcgi_script_name2 $fastcgi_script_name;
+        if ($fastcgi_script_name ~ "^(.+\.php)(/.+)$") {
+            set $fastcgi_script_name2 $1;
+            set $path_info $2;
+        }
+        fastcgi_param   PATH_INFO $path_info;
+        fastcgi_param   SCRIPT_FILENAME   $document_root$fastcgi_script_name2;
+        fastcgi_param   SCRIPT_NAME   $fastcgi_script_name2;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    location ~ /\.ht {
+        deny  all;
+    }
+}
